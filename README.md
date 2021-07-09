@@ -11,13 +11,23 @@ Number of traffic participants is selected by user. Each traffic Participant is 
 
 Prerequisites:
 
-* OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
-* sfml for graphical representation
+cmake 3.15+
 
-```mkdir build```
-```cd build```
-```cmake ..```
-```make```
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/ null
+    sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
+    sudo apt update
+    sudo apt install cmake
+
+tinyxml2 https://github.com/leethomason/tinyxml2
+sfml for graphical representation
+OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
+
+    git submodule init
+    git submodule update
+    mkdir build
+    cd build
+    cmake ..
+    make
 
 ## Project Rubric
 
