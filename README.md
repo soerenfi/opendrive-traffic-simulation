@@ -66,26 +66,29 @@ OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-
 
 ## Project Rubric
 
-* The project demonstrates an understanding of C++ functions and control structures.
-* The project reads data from a file and process the data, or the program writes data to a file.
-* The project accepts user input and processes the input.
-* The project uses Object Oriented Programming techniques.
-* Classes use appropriate access specifiers for class members.
-* Class constructors utilize member initialization lists.
-* Classes abstract implementation details from their interfaces. -> TODO
-* Classes follow an appropriate inheritance hierarchy.
-* Templates generalize functions in the project.
-* The project makes use of references in function declarations.
-* The project follows the Rule of 5. -> TODO
+* The project demonstrates an understanding of C++ functions and control structures. (e.g. opendrive_parser.cpp, parse functions for/if-else structures - opendrive_parser.cpp)
+* The project reads data from a file and process the data, or the program writes data to a file (data is read from opendrive file and processed - opendrive_parser.cpp)
+* The project accepts user input and processes the input (filename can be specified as cli input - main.cpp)
+* The project uses Object Oriented Programming techniques (e.g class definition of Map objects - tsim_map.hpp)
+* Classes use appropriate access specifiers for class members (private member variables of map objects - tsim_map.hpp)
+* Class constructors utilize member initialization lists - tsim_object.cpp -line 10)
+* Classes abstract implementation details from their interfaces (class TrafficObject/Vehicle  - tsim_object.hpp)
+* Classes follow an appropriate inheritance hierarchy  - tsim_object.hpp -line 38)
+* Templates generalize functions in the project (signum function - tsim_util.hpp - line 60)
+* The project makes use of references in function declarations (tsim_map.hpp - line 34)
+* The project follows the Rule of 5
 The project uses move semantics to move data, instead of copying it, where possible. -> TODO
 
-
-The Project employs the "Builder Pattern" for generation of the Road Map.
+Remark: The Project employs the "Builder Pattern" for generation of the Road Map. Usage of heap allocated map members supports this. 
 
 ## Further Work
 
-pan& zoom for larger maps
-non-constant lane offsets
-Multiple Lanes and lane changes
-mutex based intersection/traffic light handling
-Actual (e.g. PID based) lane following of traffic participants
+* pan& zoom for larger maps
+
+* non-constant lane offsets
+
+* lane changes
+
+* mutex based intersection/traffic light handling
+
+* Actual (e.g. PID based) lane following of traffic participants
