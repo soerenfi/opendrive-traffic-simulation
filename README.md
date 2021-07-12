@@ -43,15 +43,23 @@ Contains geometric and mathematic utilities, such as the class "Point" which is 
 
 ## Building
 
-Prerequisites:
+cmake 3.15+
 
-* OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
-* sfml for graphical representation
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/ null
+    sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
+    sudo apt update
+    sudo apt install cmake
 
-```mkdir build```
-```cd build```
-```cmake ..```
-```make```
+tinyxml2 https://github.com/leethomason/tinyxml2
+sfml for graphical representation (included in thirdparty)
+OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
+
+    git submodule init
+    git submodule update
+    mkdir build
+    cd build
+    cmake ..
+    make
 
 ## Project Rubric
 
