@@ -7,27 +7,51 @@ Number of traffic participants is selected by user. Each traffic Participant is 
 
 > This document is the copyrighted property of ASAM e.V. In alteration to the regular license terms, ASAM allows unrestricted distribution of this standard. §2 (1) of ASAM’s regular license terms is therefore substituted by the following clause: "The licensor grants everyone a basic, non-exclusive and unlimited license to use the standard ASAM OpenDRIVE".
 
+## Project Structure
+
+### main
+
+The main thread reads in filename for opendrive File from command line arguments, instanciates the opendrive parser and passes the filename to it. It then instanciates the Simulator with the generated map. It adds vehicles/traffic participants to simulator and runs the simulation.
+### opendrive_parser
+
+parses opendrive xml using tinyxml2 and uses mapbuilder to create a tsim::Map from the opendrive contents. Creates discrete road/lane marking points from analytic opendrive road description.
+
+### renderer_sfml
+
+renders contents of tsim::Map (road/lane markings) and tsim::Vehicles.
+
+### tsim_map_builder
+
+Friend class of tsim::Map. encapsulates methods for populating the tsim::Map that are not needed during Runtime.
+e.g. ```addLane```, ```addRoadSuccessor```, ...
+also creates links between Roads, Lanes, Lanesections so that the necessary search algorithms are run before Runtime. (successors/predecessors)
+
+### tsim_map
+
+contains class Definitions for Map, Road, Lane, LaneSection, Junctions that describe the simulation map. Also provides methods to simulation users (Vehicles/Objects) to help them navigate the map.
+
+### tsim_object
+
+Abstract base class for Simulation objects and derived vehicle class. Abstract class owns object type independent properties (member variables), vehicle Instanciation owns vehicle specific properties. "Simulate" function is virtual in base class and defines object behavior (movement).
+
+### tsim_simulator
+
+the simulator owns the map, the object threads and the renderer. The "run" Function starts simulation of each object and rendering.
+### tsim_util
+
+Contains geometric and mathematic utilities, such as the class "Point" which is used for Map and vehicle position definition.
+
 ## Building
 
 Prerequisites:
 
-cmake 3.15+
+* OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
+* sfml for graphical representation
 
-    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/ null
-    sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
-    sudo apt update
-    sudo apt install cmake
-
-tinyxml2 https://github.com/leethomason/tinyxml2
-sfml for graphical representation
-OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
-
-    git submodule init
-    git submodule update
-    mkdir build
-    cd build
-    cmake ..
-    make
+```mkdir build```
+```cd build```
+```cmake ..```
+```make```
 
 ## Project Rubric
 

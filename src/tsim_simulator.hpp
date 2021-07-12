@@ -27,9 +27,7 @@ class Simulator {
 
    private:
     std::shared_ptr<Map> map_;
-    // MapsRenderer renderer_;
     Renderer renderer_;
-    // Renderer renderer_;
 
     std::vector<std::shared_ptr<TrafficObject>> objects_;
     std::vector<std::thread> threads_;
