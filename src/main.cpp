@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "opendrive_parser.hpp"
+#include "tsim_object.hpp"
 #include "tsim_simulator.hpp"
 
 int main(int argc, char* argv[]) {

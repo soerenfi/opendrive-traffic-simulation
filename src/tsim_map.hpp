@@ -1,8 +1,6 @@
 #ifndef __TSIM_MAP_HPP__
 #define __TSIM_MAP_HPP__
 
-#include <bits/stdint-uintn.h>
-
 #include <algorithm>
 #include <cstdint>
 #include <memory>

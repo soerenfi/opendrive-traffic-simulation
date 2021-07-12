@@ -16,6 +16,10 @@ class TrafficObject {
    public:
     TrafficObject(std::shared_ptr<Map> map, Simulator* sim);
     virtual ~TrafficObject() = default;
+    TrafficObject(const TrafficObject& other) = delete;
+    TrafficObject(TrafficObject&& other) = delete;
+    TrafficObject operator=(const TrafficObject& other) = delete;
+    TrafficObject operator=(TrafficObject&& other) = delete;
 
     virtual void simulate(){};
 
