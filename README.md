@@ -41,6 +41,9 @@ the simulator owns the map, the object threads and the renderer. The "run" Funct
 
 Contains geometric and mathematic utilities, such as the class "Point" which is used for Map and vehicle position definition.
 
+## Expected Behavior
+
+OpenDrive map is loaded and displayed correctly. Defined number of Vehicles is displayed and moving along the road lanes in a consistent manner (i.e. without jumping around).
 ## Building
 
 cmake 3.15+
