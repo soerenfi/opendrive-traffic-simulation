@@ -55,7 +55,7 @@ cmake 3.15+
 
 tinyxml2 https://github.com/leethomason/tinyxml2
 sfml for graphical representation (included in thirdparty)
-OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr
+OpenDrive File acquired from here: https://github.com/carla-simulator/opendrive-test-files/blob/master/OpenDrive/Town01.xodr. More Information on OpenDrive can be found here: https://www.asam.net/standards/detail/opendrive/
 
     git submodule init
     git submodule update
