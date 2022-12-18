@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or this file's README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.126.0/containers/python-3
+{
+	"name": "odr-sim",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "..",
+        "args": {}
+	},
+    "runArgs": [
+		"--network=host",
+		"--ulimit",
+		"nofile=65535:65535",
+		"--gpus=all"
+	],
+    "privileged": true,
+    "updateRemoteUserUID": true,
+    "mounts": [ 
+		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/etc/gitconfig",
+		"type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix"
+		],
+    "containerEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+    },
+	"extensions": [
+	],
+	// "forwardPorts": [],
+	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"workspaceFolder": "/workspace",
+}
