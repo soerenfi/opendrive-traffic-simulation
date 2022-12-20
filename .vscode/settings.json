@@ -1,0 +1,15 @@
+{
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "editor.formatOnSave": true,
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "C_Cpp.clang_format_style": "Google",
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "[cpp]": {
+        "diffEditor.codeLens": true,
+        "editor.tabCompletion": "on",
+        "editor.tabSize": 4
+    },
+    "clangd.arguments": [
+        "--enable-config"
+    ],
+}

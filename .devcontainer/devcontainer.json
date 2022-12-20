@@ -5,25 +5,27 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": "..",
-        "args": {}
+		"args": {}
 	},
-    "runArgs": [
+	"runArgs": [
 		"--network=host",
 		"--ulimit",
 		"nofile=65535:65535",
 		"--gpus=all"
 	],
-    "privileged": true,
-    "updateRemoteUserUID": true,
-    "mounts": [ 
+	"privileged": true,
+	"updateRemoteUserUID": true,
+	"mounts": [
 		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/etc/gitconfig",
 		"type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
 		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix"
-		],
-    "containerEnv": {
-        "DISPLAY": "${localEnv:DISPLAY}",
-    },
+	],
+	"containerEnv": {
+		"DISPLAY": "${localEnv:DISPLAY}",
+	},
 	"extensions": [
+		"llvm-vs-code-extensions.vscode-clangd",
+		"ms-vscode.cpptools"
 	],
 	// "forwardPorts": [],
 	// "postCreateCommand": "pip3 install --user -r requirements.txt",
