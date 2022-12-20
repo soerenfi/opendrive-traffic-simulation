@@ -6,8 +6,10 @@
 namespace tsim {
 namespace util {
 
-bool almostEqual(double a, double b) { return std::abs(a - b) < std::numeric_limits<double>::epsilon(); }
+bool almostEqual(double a, double b) {
+  return std::abs(a - b) < std::numeric_limits<double>::epsilon();
+}
 
-}  // namespace util
+} // namespace util
 
-}  // namespace tsim
+} // namespace tsim

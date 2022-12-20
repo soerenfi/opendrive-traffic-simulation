@@ -6,7 +6,7 @@
         {
             "label": "build tsim (debug)",
             "type": "shell",
-            "command": "cmake ${workspaceRoot} -DBUILD_CONFIG=debug && make -j12",
+            "command": "cmake ${workspaceRoot} -DCMAKE_BUILD_TYPE=debug && make -j12",
             "options": {
                 "cwd": "${workspaceRoot}/build"
             },

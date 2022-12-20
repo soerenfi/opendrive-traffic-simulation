@@ -1,6 +1,8 @@
 #ifndef __TSIM_OBJECT_HPP__
 #define __TSIM_OBJECT_HPP__
 
+#include <glm/glm.hpp>
+
 #include <algorithm>
 #include <cstdint>
 #include <thread>
@@ -13,39 +15,42 @@
 namespace tsim {
 
 class TrafficObject {
-   public:
-    TrafficObject(std::shared_ptr<Map> map, Simulator* sim);
-    virtual ~TrafficObject() = default;
-    TrafficObject(const TrafficObject& other) = delete;
-    TrafficObject(TrafficObject&& other) = delete;
-    TrafficObject operator=(const TrafficObject& other) = delete;
-    TrafficObject operator=(TrafficObject&& other) = delete;
+public:
+  TrafficObject(std::shared_ptr<Map> map, Simulator* sim, int id);
+  virtual ~TrafficObject() = default;
+  TrafficObject(const TrafficObject& other) = delete;  // TODO(soeren): implement
+  TrafficObject(TrafficObject&& other) = delete;
+  TrafficObject operator=(const TrafficObject& other) = delete;
+  TrafficObject operator=(TrafficObject&& other) = delete;
 
-    virtual void simulate(){};
+  virtual void simulate(){};
 
-    const Point& position() const { return position_; };
+  const glm::vec3& getPosition() const {
+    return m_position;
+  };
 
-   protected:
-    std::shared_ptr<Map> map_;
-    Simulator* simulator_;
+protected:
+  std::shared_ptr<Map> m_map;
+  Simulator* m_simulator;
 
-    Point position_{0.0f, 0.0f};
+  glm::vec3 m_position{0.0f, 0.0f, 0.0f};
+  glm::vec3 m_dimension{4.5f, 2.0f, 1.8f};
+  glm::vec3 m_orientation{0.0f, 0.0f, 0.0f};
 
-    uint16_t id_;
-    static uint16_t id_counter_;
+  uint16_t m_id;
 };
 
 class Vehicle : public TrafficObject {
-   public:
-    Vehicle(std::shared_ptr<Map> map, Simulator* sim);
+public:
+  Vehicle(std::shared_ptr<Map> map, Simulator* sim, int id);
 
-    virtual void simulate() override;
+  void simulate() override;
 
-   private:
-    void drive();
+private:
+  void drive();
 
-    std::shared_ptr<Road> current_road_;
-    std::shared_ptr<Lane> current_lane_;
+  std::shared_ptr<Road> m_currentRoad;
+  std::shared_ptr<Lane> m_currentLane;
 };
 
 }  // namespace tsim
