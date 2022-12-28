@@ -28,14 +28,14 @@ jobs:
           file: .devcontainer/Dockerfile
           pull: true
           push: true
-          tags: ${{secrets.DOCKER_USER}}/xodr-dev:${{ github.sha }}
+          tags: ${{github.actor}}/xodr-dev:${{ github.sha }}
 
   xodr-build:
     name: Compile in Docker
     needs: docker-build
     runs-on: ubuntu-latest
     container: 
-      image: ${{secrets.DOCKER_USER}}/xodr-dev:${{ github.sha }}
+      image: ${{github.actor}}/xodr-dev:${{ github.sha }}
       env:
         NODE_ENV: development
       ports:
