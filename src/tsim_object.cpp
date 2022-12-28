@@ -1,71 +1,75 @@
-#include <iostream>
-#include <thread>
-
-#include "tsim_map.hpp"
 #include "tsim_object.hpp"
 
+#include <iostream>
+#include <thread>
+#include <utility>
+
+#include "tsim_map.hpp"
+
 namespace tsim {
-uint16_t TrafficObject::id_counter_{0};
+using std::shared_ptr;
 
-TrafficObject::TrafficObject(std::shared_ptr<Map> map, Simulator* sim) : map_(map), simulator_(sim) {
-    id_ = id_counter_++;
+TrafficObject::TrafficObject(shared_ptr<Map> map, Simulator* sim, int id)
+    : m_map(std::move(map))
+    , m_simulator(sim)
+    , m_id(id) {}
+
+Vehicle::Vehicle(std::shared_ptr<Map> map, Simulator* sim, int id)
+    : TrafficObject(std::move(map), sim, id) {
+  m_currentRoad = m_map->getRandomRoad();
+  m_currentLane = m_currentRoad->sections().at(0)->lane(-1);
+  m_position = m_currentLane->startPoint();
 }
 
-Vehicle::Vehicle(std::shared_ptr<Map> map, Simulator* sim) : TrafficObject(map, sim) {
-    current_road_ = map_->getRandomRoad();
-    current_lane_ = current_road_->sections().at(0)->lane(-1);
-    position_ = current_lane_->startPoint();
-}
-
-void Vehicle::simulate() { simulator_->addThread(std::thread(&Vehicle::drive, this)); };
+void Vehicle::simulate() {
+  m_simulator->addThread(std::thread(&Vehicle::drive, this));
+};
 
 void Vehicle::drive() {
-    auto lane_size = current_lane_->points().size() - 1;
-    auto step = std::chrono::milliseconds(20);
-    int lane_step = 0;
-    int steps_taken{0};
-    while (true) {
-        auto now = std::chrono::system_clock::now();
-        auto target = now + step;
-        position_ = current_lane_->points().at(lane_step);
+  auto laneSize = m_currentLane->points().size() - 1;
+  auto step = std::chrono::milliseconds(20);
+  int laneStep = 0;
+  int stepsTaken{0};
+  while (true) {
+    auto now = std::chrono::system_clock::now();
+    auto target = now + step;
+    m_position = m_currentLane->points().at(laneStep);
 
-        if (steps_taken < lane_size) {
-            if (current_lane_->id() < 0) {
-                lane_step += 1;
-            } else {
-                lane_step -= 1;
-            }
-            steps_taken++;
-        }
-
-        else {
-            // end of road reached
-            // std::vector<std::shared_ptr<Road>> next_roads;
-            std::vector<std::shared_ptr<Lane>> next_lanes;
-            if (current_lane_->id() < 0) {
-                // next_roads = current_road_->successors();
-                next_lanes = current_lane_->successors();
-            } else {
-                // next_roads = current_road_->predecessors();
-                next_lanes = current_lane_->predecessors();
-            }
-            // pick random road to continue driving
-            auto rand_it = next_lanes.begin();
-            std::advance(rand_it, std::rand() % next_lanes.size());
-            current_lane_ = (*rand_it);
-
-            lane_size = current_lane_->points().size() - 1;
-
-            // jump to start/end of new road depending on driving direction
-            if (current_lane_->id() < 0) {
-                lane_step = 0;
-
-            } else {
-                lane_step = current_lane_->points().size() - 1;
-            }
-            steps_taken = 0;
-        }
-        std::this_thread::sleep_until(target);
+    if (stepsTaken < laneSize) {
+      if (m_currentLane->id() < 0) {
+        laneStep += 1;
+      } else {
+        laneStep -= 1;
+      }
+      stepsTaken++;
     }
+
+    else {
+      // end of road reached
+      std::vector<std::shared_ptr<Lane>> nextLanes;
+      if (m_currentLane->id() < 0) {
+        nextLanes = m_currentLane->successors();
+      } else {
+        nextLanes = m_currentLane->predecessors();
+      }
+      // pick random road to continue driving
+      auto randIt = nextLanes.begin();
+      std::cout << nextLanes.size() << " currlaneid " << m_currentLane->id() << " currRoadID "
+                << m_currentRoad->id() << std::endl;
+      std::advance(randIt, std::rand() % nextLanes.size());
+      m_currentLane = (*randIt);
+
+      laneSize = m_currentLane->points().size() - 1;
+
+      // jump to start/end of new road depending on driving direction
+      if (m_currentLane->id() < 0) {
+        laneStep = 0;
+      } else {
+        laneStep = m_currentLane->points().size() - 1;
+      }
+      stepsTaken = 0;
+    }
+    std::this_thread::sleep_until(target);
+  }
 }
 }  // namespace tsim

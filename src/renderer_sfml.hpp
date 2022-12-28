@@ -7,8 +7,8 @@
 //
 #include <SFML/Graphics.hpp>
 
-constexpr std::size_t kScreenWidth{1600};
-constexpr std::size_t kScreenHeight{900};
+constexpr std::size_t SCREEN_WIDTH{1600};
+constexpr std::size_t SCREEN_HEIGHT{900};
 
 namespace tsim {
 class Simulator;
@@ -16,36 +16,36 @@ class TrafficObject;
 }  // namespace tsim
 
 class Renderer {
-   public:
-    Renderer(tsim::Simulator* sim);
-    ~Renderer(){};
+public:
+  explicit Renderer(tsim::Simulator* sim);
+  ~Renderer() = default;
 
-    void render();
+  void render();
 
-    void drawLanes();
-    void drawVehicles();
+  void drawLanes();
+  void drawVehicles() const;
 
-    void findMaxMinValues();
+  void findMaxMinValues();
 
-   private:
-    std::unique_ptr<sf::RenderWindow> window_;
+private:
+  std::unique_ptr<sf::RenderWindow> m_window;
 
-    tsim::Simulator* simulator_;
-    std::shared_ptr<tsim::Map> map_;
-    std::vector<std::shared_ptr<tsim::TrafficObject>> objects_;
+  tsim::Simulator* m_simulator;
+  std::shared_ptr<tsim::Map> m_map;
+  std::vector<std::shared_ptr<tsim::TrafficObject>> m_objects;
 
-    double min_x{0};
-    double max_x{0};
-    double min_y{0};
-    double max_y{0};
+  double m_minX{0};
+  double m_maxX{0};
+  double m_minY{0};
+  double m_maxY{0};
 
-    double scale_;
-    int frame_count = 0;
-    std::size_t target_frame_duration{1000 / 60};
-    int close{0};
-    sf::Color background_color_{74, 83, 97};
-    const std::size_t screen_width{kScreenWidth};
-    const std::size_t screen_height{kScreenHeight};
+  double m_scale;
+  int m_frameCount = 0;
+  std::size_t m_targetFrameDuration{1000 / 60};
+  int m_close{0};
+  sf::Color m_backgroundColor{74, 83, 97};
+  const std::size_t m_screenWidth{SCREEN_WIDTH};
+  const std::size_t m_screenHeight{SCREEN_HEIGHT};
 };
 
 #endif  // __RENDERER_SFML_HPP__
