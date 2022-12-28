@@ -19,6 +19,7 @@ jobs:
         with:
           context: .
           file: .devcontainer/Dockerfile
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
           pull: true
