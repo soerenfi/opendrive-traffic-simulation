@@ -3,6 +3,7 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   docker-build:
+    name: Build Docker env
     runs-on: ubuntu-latest
     steps:
       - name: Copy Repo Files
@@ -22,6 +23,8 @@ jobs:
           tags: soerenfi/xodr-dev:latest
 
   xodr-build:
+    name: Compile in Docker
+    needs: docker-build
     runs-on: ubuntu-latest
     container: 
       image: soerenfi/xodr-dev:latest
