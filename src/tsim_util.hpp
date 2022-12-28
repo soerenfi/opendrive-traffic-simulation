@@ -13,12 +13,15 @@ using Point = glm::vec3;
 
 namespace util {
 
-template <typename T> int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+template <typename T>
+int sgn(T val) {
+  return (T(0) < val) - (val < T(0));
+}
 
 bool almostEqual(double a, double b);
 
-} // namespace util
+}  // namespace util
 
-} // namespace tsim
+}  // namespace tsim
 
-#endif // __TSIM_GEOMETRIC_HPP__
+#endif  // __TSIM_GEOMETRIC_HPP__

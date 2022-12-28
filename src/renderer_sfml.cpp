@@ -13,15 +13,14 @@ Renderer::Renderer(tsim::Simulator* sim)
   sf::ContextSettings settings;
   settings.antialiasingLevel = 16;
 
-  m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
-                                                "TrafficSim", sf::Style::Default, settings);
+  m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "TrafficSim",
+                                                sf::Style::Default, settings);
   m_map = m_simulator->getMap();
   findMaxMinValues();
   m_scale = std::max((m_maxY - m_minY), (m_maxX - m_minX)) * 1.1f;
 
   sf::View view2;
-  view2.setCenter(sf::Vector2f((std::abs(m_maxX) - std::abs(m_minX)) / 2,
-                               -(std::abs(m_maxY) - std::abs(m_minY)) / 2));
+  view2.setCenter(sf::Vector2f((std::abs(m_maxX) - std::abs(m_minX)) / 2, -(std::abs(m_maxY) - std::abs(m_minY)) / 2));
   view2.setSize(sf::Vector2f(m_scale * SCREEN_WIDTH / SCREEN_HEIGHT, m_scale));
 
   m_window->setView(view2);
@@ -96,8 +95,7 @@ void Renderer::drawVehicles() const {
   // rectangle.setFillColor(sf::Color::Red);
   // rectangle.setOutlineThickness(0);
   for (const auto object : m_objects) {
-    rectangle.setPosition(object->getPosition().x - (size / 2),
-                          -object->getPosition().y - (size / 2));
+    rectangle.setPosition(object->getPosition().x - (size / 2), -object->getPosition().y - (size / 2));
     m_window->draw(rectangle);
   }
 }

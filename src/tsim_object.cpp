@@ -54,8 +54,8 @@ void Vehicle::drive() {
       }
       // pick random road to continue driving
       auto randIt = nextLanes.begin();
-      std::cout << nextLanes.size() << " currlaneid " << m_currentLane->id() << " currRoadID "
-                << m_currentRoad->id() << std::endl;
+      std::cout << nextLanes.size() << " currlaneid " << m_currentLane->id() << " currRoadID " << m_currentRoad->id()
+                << std::endl;
       std::advance(randIt, std::rand() % nextLanes.size());
       m_currentLane = (*randIt);
 

@@ -24,7 +24,7 @@ src/tsim_simulator.cpp
 src/tsim_map_builder.cpp
 src/renderer_sfml.cpp
 src/tsim_util.cpp
-#src/osi_publisher.cpp
+src/osi_publisher.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
