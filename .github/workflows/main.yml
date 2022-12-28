@@ -20,7 +20,7 @@ jobs:
           context: .
           file: .devcontainer/Dockerfile
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
           pull: true
           push: true
           tags: ${{github.actor}}/xodr-dev:${{ github.sha }}
