@@ -10,13 +10,11 @@
 namespace tsim {
 
 std::shared_ptr<Lane> LaneSection::lane(int lid) const {
-  auto iterator =
-    std::find_if(m_lanes.begin(), m_lanes.end(), [lid](const std::shared_ptr<Lane>& lane) {
-      return lane->id() == lid;
-    });
+  auto iterator = std::find_if(m_lanes.begin(), m_lanes.end(), [lid](const std::shared_ptr<Lane>& lane) {
+    return lane->id() == lid;
+  });
   if (iterator == m_lanes.end()) {
-    throw std::logic_error("lane " + std::to_string(lid) + "not found in Road " +
-                           std::to_string(this->m_road->id()));
+    throw std::logic_error("lane " + std::to_string(lid) + "not found in Road " + std::to_string(this->m_road->id()));
   }
   return *iterator;
 }
@@ -27,20 +25,19 @@ std::shared_ptr<Lane> Road::getFirstLane() {
 };
 
 std::shared_ptr<Road> Map::findRoadById(int rid) {
-  auto iterator =
-    std::find_if(m_roads.begin(), m_roads.end(), [rid](const std::shared_ptr<Road>& road) {
-      return road->id() == rid;
-    });
+  auto iterator = std::find_if(m_roads.begin(), m_roads.end(), [rid](const std::shared_ptr<Road>& road) {
+    return road->id() == rid;
+  });
   if (iterator != m_roads.end()) {
     return (*iterator);
   }
   return nullptr;
 }
 std::shared_ptr<Junction> Map::findJunctionById(int jid) {
-  auto iterator = std::find_if(m_junctions.begin(), m_junctions.end(),
-                               [jid](const std::shared_ptr<Junction>& junction) {
-                                 return junction->id() == jid;
-                               });
+  auto iterator =
+    std::find_if(m_junctions.begin(), m_junctions.end(), [jid](const std::shared_ptr<Junction>& junction) {
+      return junction->id() == jid;
+    });
   return (iterator != m_junctions.end() ? *iterator : nullptr);
   // if (it != m_junctions.end()) {
   //   return (*it);

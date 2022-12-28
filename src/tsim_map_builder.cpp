@@ -18,28 +18,25 @@ std::shared_ptr<Road> MapBuilder::addRoad(int id, int junction) {
   return road;
 }
 std::shared_ptr<Road> MapBuilder::getRoad(int id) {
-  auto it =
-    std::find_if(m_map->m_roads.begin(), m_map->m_roads.end(), [id](std::shared_ptr<Road> road) {
-      return road->id() == id;
-    });
+  auto it = std::find_if(m_map->m_roads.begin(), m_map->m_roads.end(), [id](std::shared_ptr<Road> road) {
+    return road->id() == id;
+  });
   if (it != m_map->m_roads.end()) return (*it);
   return nullptr;
 }
 
 std::shared_ptr<Junction> MapBuilder::getJunction(int id) {
-  auto it = std::find_if(m_map->m_junctions.begin(), m_map->m_junctions.end(),
-                         [id](std::shared_ptr<Junction> junction) {
-                           return junction->id() == id;
-                         });
+  auto it =
+    std::find_if(m_map->m_junctions.begin(), m_map->m_junctions.end(), [id](std::shared_ptr<Junction> junction) {
+      return junction->id() == id;
+    });
   if (it != m_map->m_junctions.end()) return (*it);
   return nullptr;
 }
 
-std::vector<std::shared_ptr<Road>> MapBuilder::junction_findConnectingRoads(Junction* junction,
-                                                                            Road* road) {
+std::vector<std::shared_ptr<Road>> MapBuilder::junction_findConnectingRoads(Junction* junction, Road* road) {
   std::vector<std::shared_ptr<JunctionConnection>> connectingRoads;
-  std::copy_if(junction->m_connections.begin(), junction->m_connections.end(),
-               std::back_inserter(connectingRoads),
+  std::copy_if(junction->m_connections.begin(), junction->m_connections.end(), std::back_inserter(connectingRoads),
                [road](const std::shared_ptr<JunctionConnection>& connection) {
                  return connection->m_incomingRoad == road->id();
                });
@@ -61,16 +58,14 @@ void MapBuilder::road_addSuccessor(Road* road, std::shared_ptr<Road> successor) 
 void MapBuilder::road_addRoadPoints(Road* road, std::vector<Point> points) {
   road->m_roadPoints.insert(road->m_roadPoints.end(), points.begin(), points.end());
 }
-std::shared_ptr<LaneSection> MapBuilder::road_addLaneSection(std::shared_ptr<Road> road,
-                                                             double s_offset) {
+std::shared_ptr<LaneSection> MapBuilder::road_addLaneSection(std::shared_ptr<Road> road, double s_offset) {
   std::shared_ptr<LaneSection> lane_section = std::make_shared<LaneSection>(road);
   lane_section->m_sOffset = s_offset;
   road->m_sections.push_back(lane_section);
   return lane_section;
 }
-std::shared_ptr<Lane> MapBuilder::laneSection_addLane(std::shared_ptr<LaneSection> lane_section,
-                                                      uint32_t id, double offset, double width,
-                                                      LaneType type) {
+std::shared_ptr<Lane> MapBuilder::laneSection_addLane(std::shared_ptr<LaneSection> lane_section, uint32_t id,
+                                                      double offset, double width, LaneType type) {
   std::shared_ptr<Lane> lane = std::make_shared<Lane>(lane_section);
   lane->m_id = id;
   lane->m_offset = offset;
@@ -79,12 +74,10 @@ std::shared_ptr<Lane> MapBuilder::laneSection_addLane(std::shared_ptr<LaneSectio
   lane_section->m_lanes.push_back(lane);
   return lane;
 }
-void MapBuilder::laneSection_addPredecessor(LaneSection* lane_section,
-                                            std::shared_ptr<LaneSection> predecessor) {
+void MapBuilder::laneSection_addPredecessor(LaneSection* lane_section, std::shared_ptr<LaneSection> predecessor) {
   lane_section->m_predecessors.push_back(predecessor);
 }
-void MapBuilder::laneSection_addSuccessor(LaneSection* lane_section,
-                                          std::shared_ptr<LaneSection> successor) {
+void MapBuilder::laneSection_addSuccessor(LaneSection* lane_section, std::shared_ptr<LaneSection> successor) {
   lane_section->m_successors.push_back(successor);
 }
 void MapBuilder::lane_addLanePoints(Lane* lane, std::vector<Point> points) {
@@ -106,8 +99,7 @@ std::shared_ptr<Junction> MapBuilder::addJunction(int id) {
   m_map->m_junctions.push_back(junction);
   return junction;
 }
-std::shared_ptr<JunctionConnection> MapBuilder::junction_addConnection(Junction* junction,
-                                                                       uint32_t incoming_road,
+std::shared_ptr<JunctionConnection> MapBuilder::junction_addConnection(Junction* junction, uint32_t incoming_road,
                                                                        uint32_t connecting_road) {
   std::shared_ptr<JunctionConnection> connection = std::make_shared<JunctionConnection>();
   connection->m_incomingRoad = incoming_road;

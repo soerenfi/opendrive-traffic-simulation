@@ -37,19 +37,18 @@ std::shared_ptr<tsim::Map> OpenDriveParser::parse(const std::string& filename) {
 }
 
 void OpenDriveParser::parseHeader() {
-  auto odr = m_xmlDoc.FirstChildElement("OpenDRIVE");
-  auto rev_major = odr->FirstChildElement("header")->UnsignedAttribute("revMajor");
-  auto rev_minor = odr->FirstChildElement("header")->UnsignedAttribute("revMinor");
+  auto* odr = m_xmlDoc.FirstChildElement("OpenDRIVE");
+  auto revMajor = odr->FirstChildElement("header")->UnsignedAttribute("revMajor");
+  auto revMinor = odr->FirstChildElement("header")->UnsignedAttribute("revMinor");
 }
 
 void OpenDriveParser::parseRoads() {
-  auto odr = m_xmlDoc.FirstChildElement("OpenDRIVE");
+  auto* odr = m_xmlDoc.FirstChildElement("OpenDRIVE");
 
   for (auto* odrRoad = odr->FirstChildElement("road"); odrRoad != nullptr;
        odrRoad = odrRoad->NextSiblingElement("road")) {
     // add each road to map
-    auto road =
-      m_mapBuilder.addRoad(odrRoad->UnsignedAttribute("id"), odrRoad->IntAttribute("junction"));
+    auto road = m_mapBuilder.addRoad(odrRoad->UnsignedAttribute("id"), odrRoad->IntAttribute("junction"));
     // calculate road geometries
     calculateRoadPoints(road.get(), odrRoad);
   }
@@ -60,13 +59,12 @@ void OpenDriveParser::parseJunctions() {
        odrJunction = odrJunction->NextSiblingElement("junction")) {
     // add each junction to map
     auto junction = m_mapBuilder.addJunction(odrJunction->UnsignedAttribute("id"));
-    for (auto* odrConnection = odrJunction->FirstChildElement("connection");
-         odrConnection != nullptr;
+    for (auto* odrConnection = odrJunction->FirstChildElement("connection"); odrConnection != nullptr;
          odrConnection = odrConnection->NextSiblingElement("connection")) {
       // add junction connections
-      auto connection = m_mapBuilder.junction_addConnection(
-        junction.get(), odrConnection->UnsignedAttribute("incomingRoad"),
-        odrConnection->UnsignedAttribute("connectingRoad"));
+      auto connection =
+        m_mapBuilder.junction_addConnection(junction.get(), odrConnection->UnsignedAttribute("incomingRoad"),
+                                            odrConnection->UnsignedAttribute("connectingRoad"));
       // add lane links
       for (auto* odrLaneLink = odrConnection->FirstChildElement("laneLink"); odrLaneLink != nullptr;
            odrLaneLink = odrLaneLink->NextSiblingElement("laneLink")) {
@@ -147,8 +145,7 @@ void OpenDriveParser::parseLaneSections() {
        odrRoad = odrRoad->NextSiblingElement("road")) {
     auto road = m_mapBuilder.getRoad(odrRoad->UnsignedAttribute("id"));
     auto* odrLanes = odrRoad->FirstChildElement("lanes");
-    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection");
-         odrLaneSection != nullptr;
+    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection"); odrLaneSection != nullptr;
          odrLaneSection = odrLaneSection->NextSiblingElement("laneSection")) {
       // add all lane sections to map
       std::shared_ptr<tsim::LaneSection> laneSection =
@@ -164,8 +161,7 @@ void OpenDriveParser::parseLaneSections() {
     std::size_t laneSectionCounter{0};
     auto laneSections = road->sections();
     auto roadId = road->id();
-    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection");
-         odrLaneSection != nullptr;
+    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection"); odrLaneSection != nullptr;
          odrLaneSection = odrLaneSection->NextSiblingElement("laneSection")) {
       // populate lane section connections
       if (odrRoad->IntAttribute("junction") == -1) {  // TODO not according to standard
@@ -181,22 +177,18 @@ void OpenDriveParser::parseLaneSections() {
           for (const auto& succ : roadSuccessors)
             m_mapBuilder.laneSection_addSuccessor(laneSection.get(), succ->sections().front());
         } else if (laneSectionCounter == 0) {
-          m_mapBuilder.laneSection_addSuccessor(laneSection.get(),
-                                                laneSections.at(laneSectionCounter + 1));
+          m_mapBuilder.laneSection_addSuccessor(laneSection.get(), laneSections.at(laneSectionCounter + 1));
           auto roadPredecessors = road->predecessors();
           for (const auto& succ : roadPredecessors)
             m_mapBuilder.laneSection_addPredecessor(laneSection.get(), succ->sections().back());
         } else if (laneSectionCounter == laneSections.size() - 1) {
-          m_mapBuilder.laneSection_addPredecessor(laneSection.get(),
-                                                  laneSections.at(laneSectionCounter - 1));
+          m_mapBuilder.laneSection_addPredecessor(laneSection.get(), laneSections.at(laneSectionCounter - 1));
           auto roadSuccessors = road->successors();
           for (const auto& succ : roadSuccessors)
             m_mapBuilder.laneSection_addSuccessor(laneSection.get(), succ->sections().front());
         } else {
-          m_mapBuilder.laneSection_addSuccessor(laneSection.get(),
-                                                laneSections.at(laneSectionCounter + 1));
-          m_mapBuilder.laneSection_addPredecessor(laneSection.get(),
-                                                  laneSections.at(laneSectionCounter - 1));
+          m_mapBuilder.laneSection_addSuccessor(laneSection.get(), laneSections.at(laneSectionCounter + 1));
+          m_mapBuilder.laneSection_addPredecessor(laneSection.get(), laneSections.at(laneSectionCounter - 1));
         }
       } else {
         // road is part of a junction. Add last lane section of previous road as predecessor, first
@@ -221,8 +213,7 @@ void OpenDriveParser::parseLanes() {
     auto* odrLanes = odrRoad->FirstChildElement("lanes");
     //
     std::size_t laneSectionCounter{0};
-    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection");
-         odrLaneSection != nullptr;
+    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection"); odrLaneSection != nullptr;
          odrLaneSection = odrLaneSection->NextSiblingElement("laneSection")) {
       auto laneSections = road->sections();
       auto laneSection = laneSections.at(laneSectionCounter);
@@ -248,8 +239,7 @@ void OpenDriveParser::laneConnections() {
     auto road = m_mapBuilder.getRoad(odrRoad->UnsignedAttribute("id"));
     auto* odrLanes = odrRoad->FirstChildElement("lanes");
     std::size_t laneSectionCounter{0};
-    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection");
-         odrLaneSection != nullptr;
+    for (auto* odrLaneSection = odrLanes->FirstChildElement("laneSection"); odrLaneSection != nullptr;
          odrLaneSection = odrLaneSection->NextSiblingElement("laneSection")) {
       auto laneSections = road->sections();
       auto laneSection = laneSections.at(laneSectionCounter);
@@ -273,10 +263,8 @@ void OpenDriveParser::parseLaneGroup(std::shared_ptr<tsim::LaneSection> lane_sec
        odrLane = odrLane->NextSiblingElement("lane")) {
     // add all lanes to the map
     auto lane = m_mapBuilder.laneSection_addLane(
-      lane_section, odrLane->IntAttribute("id"),
-      odrLane->FirstChildElement("width")->DoubleAttribute("sOffset"),
-      odrLane->FirstChildElement("width")->DoubleAttribute("a"),
-      parseLaneType(odrLane->Attribute("type")));
+      lane_section, odrLane->IntAttribute("id"), odrLane->FirstChildElement("width")->DoubleAttribute("sOffset"),
+      odrLane->FirstChildElement("width")->DoubleAttribute("a"), parseLaneType(odrLane->Attribute("type")));
     // calculate lane geometries
     calculateLaneBoundaryPoints(lane.get(), odrLane);
     calculateLanePoints(lane.get(), odrLane);
@@ -300,8 +288,7 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
           // find predecessor
           auto lane_section_predecessors = lane_section->predecessors();
           for (auto elem : lane_section_predecessors) {
-            m_mapBuilder.lane_addPredecessor(lane.get(),
-                                             elem->lane(odr_predecessor->IntAttribute("id")));
+            m_mapBuilder.lane_addPredecessor(lane.get(), elem->lane(odr_predecessor->IntAttribute("id")));
           }
         } else {
           // predecessor is a junction
@@ -318,12 +305,10 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
                     (conn->connectingRoad() == elem->road()->id())) {
                   auto lls = conn->getLaneLinks();
                   std::vector<tsim::LaneLink> res;
-                  std::copy_if(lls.begin(), lls.end(), std::back_inserter(res),
-                               [lane](const tsim::LaneLink& ll) {
-                                 return ll.from == lane->id();
-                               });
-                  for (auto link : res)
-                    m_mapBuilder.lane_addPredecessor(lane.get(), elem->lane(link.to));
+                  std::copy_if(lls.begin(), lls.end(), std::back_inserter(res), [lane](const tsim::LaneLink& ll) {
+                    return ll.from == lane->id();
+                  });
+                  for (auto link : res) m_mapBuilder.lane_addPredecessor(lane.get(), elem->lane(link.to));
                 }
               }
             }
@@ -333,8 +318,7 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
         if (odr_successor) {
           auto lane_section_successors = lane_section->successors();
           for (auto elem : lane_section_successors) {
-            m_mapBuilder.lane_addSuccessor(lane.get(),
-                                           elem->lane(odr_successor->IntAttribute("id")));
+            m_mapBuilder.lane_addSuccessor(lane.get(), elem->lane(odr_successor->IntAttribute("id")));
           }
         } else {
           // check if predecessor is a junction
@@ -350,12 +334,10 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
                     (conn->connectingRoad() == elem->road()->id())) {
                   auto lls = conn->getLaneLinks();
                   std::vector<tsim::LaneLink> res;
-                  std::copy_if(lls.begin(), lls.end(), std::back_inserter(res),
-                               [lane](const tsim::LaneLink& ll) {
-                                 return ll.from == lane->id();
-                               });
-                  for (auto link : res)
-                    m_mapBuilder.lane_addSuccessor(lane.get(), elem->lane(link.to));
+                  std::copy_if(lls.begin(), lls.end(), std::back_inserter(res), [lane](const tsim::LaneLink& ll) {
+                    return ll.from == lane->id();
+                  });
+                  for (auto link : res) m_mapBuilder.lane_addSuccessor(lane.get(), elem->lane(link.to));
                 }
               }
             }
@@ -376,12 +358,10 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
                   (conn->connectingRoad() == elem->road()->id())) {
                 auto lls = conn->getLaneLinks();
                 std::vector<tsim::LaneLink> res;
-                std::copy_if(lls.begin(), lls.end(), std::back_inserter(res),
-                             [lane](const tsim::LaneLink& ll) {
-                               return ll.from == lane->id();
-                             });
-                for (auto link : res)
-                  m_mapBuilder.lane_addPredecessor(lane.get(), elem->lane(link.to));
+                std::copy_if(lls.begin(), lls.end(), std::back_inserter(res), [lane](const tsim::LaneLink& ll) {
+                  return ll.from == lane->id();
+                });
+                for (auto link : res) m_mapBuilder.lane_addPredecessor(lane.get(), elem->lane(link.to));
               }
             }
           }
@@ -398,10 +378,9 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
                   (conn->connectingRoad() == elem->road()->id())) {
                 auto lls = conn->getLaneLinks();
                 std::vector<tsim::LaneLink> res;
-                std::copy_if(lls.begin(), lls.end(), std::back_inserter(res),
-                             [lane](const tsim::LaneLink& ll) {
-                               return ll.from == lane->id();
-                             });
+                std::copy_if(lls.begin(), lls.end(), std::back_inserter(res), [lane](const tsim::LaneLink& ll) {
+                  return ll.from == lane->id();
+                });
                 for (auto link : res) {
                   m_mapBuilder.lane_addSuccessor(lane.get(), elem->lane(link.to));
                 }
@@ -414,8 +393,7 @@ void OpenDriveParser::laneConnections(std::shared_ptr<tsim::LaneSection> lane_se
   }
 }
 
-void OpenDriveParser::calculateLaneBoundaryPoints(tsim::Lane* lane,
-                                                  const tinyxml2::XMLElement* odrLane) {
+void OpenDriveParser::calculateLaneBoundaryPoints(tsim::Lane* lane, const tinyxml2::XMLElement* odrLane) {
   const auto* odrRoad = odrLane->Parent()->Parent()->Parent()->Parent();
 
   auto planView = odrRoad->FirstChildElement("planView");
@@ -470,8 +448,8 @@ void OpenDriveParser::calculateLanePoints(tsim::Lane* lane, const tinyxml2::XMLE
   }
 }
 
-std::vector<tsim::Point> OpenDriveParser::calculateStraight(double x, double y, double hdg,
-                                                            double length, double offset) {
+std::vector<tsim::Point> OpenDriveParser::calculateStraight(double x, double y, double hdg, double length,
+                                                            double offset) {
   std::vector<tsim::Point> points;
 
   tsim::Point pOffset(-offset * std::sin(hdg), offset * std::cos(hdg), 0);  // TODO
@@ -479,14 +457,12 @@ std::vector<tsim::Point> OpenDriveParser::calculateStraight(double x, double y, 
   double yOffset = offset * std::cos(hdg);
 
   points.emplace_back(glm::vec3{x + xOffset, y + yOffset, 0.0f});
-  auto end =
-    glm::vec3{x + length * std::cos(hdg) + xOffset, y + length * std::sin(hdg) + yOffset, 0.0f};
+  auto end = glm::vec3{x + length * std::cos(hdg) + xOffset, y + length * std::sin(hdg) + yOffset, 0.0f};
 
   double roadLength{0};
   double step = 1.f;
   while (roadLength < length) {
-    glm::vec3 next =
-      glm::vec3{(x += step * std::cos(hdg)) + xOffset, (y += step * std::sin(hdg)) + yOffset, 0.0f};
+    glm::vec3 next = glm::vec3{(x += step * std::cos(hdg)) + xOffset, (y += step * std::sin(hdg)) + yOffset, 0.0f};
     roadLength += step;
     points.emplace_back(next);
   }
@@ -494,8 +470,8 @@ std::vector<tsim::Point> OpenDriveParser::calculateStraight(double x, double y, 
   return points;
 }
 
-std::vector<tsim::Point> OpenDriveParser::calculateArc(double x, double y, double hdg,
-                                                       double length, double arc, double offset) {
+std::vector<tsim::Point> OpenDriveParser::calculateArc(double x, double y, double hdg, double length, double arc,
+                                                       double offset) {
   std::vector<tsim::Point> points;
   double xOffset = -offset * std::sin(hdg);
   double yOffset = offset * std::cos(hdg);
@@ -509,14 +485,12 @@ std::vector<tsim::Point> OpenDriveParser::calculateArc(double x, double y, doubl
   double end_angle = start_angle + length * arc;
 
   tsim::Point end((xM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::cos(end_angle)),
-                  (yM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::sin(end_angle)),
-                  0.0f);
+                  (yM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::sin(end_angle)), 0.0f);
 
   for (double angle = start_angle; tsim::util::sgn(arc) * angle < tsim::util::sgn(arc) * end_angle;
        angle += length * arc / 20) {
-    glm::vec3 next = glm::vec3{
-      (xM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::cos(angle)),
-      (yM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::sin(angle)), 0.0f};
+    glm::vec3 next = glm::vec3{(xM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::cos(angle)),
+                               (yM + (1 / std::abs(arc) + tsim::util::sgn(arc) * -offset) * std::sin(angle)), 0.0f};
     points.emplace_back(next);
   }
   points.emplace_back(end);
