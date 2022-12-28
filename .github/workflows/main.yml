@@ -76,8 +76,6 @@ jobs:
       - name: Copy Repo Files
         uses: actions/checkout@v3
       - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master
-        with:
-          submodules: recursive
+        run: git submodule update --init --recursive
       - name: build
         run: ./build.sh
