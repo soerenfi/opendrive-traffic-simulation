@@ -36,8 +36,6 @@ private:
   tsim::LaneType parseLaneType(const char* lt);
 
 private:
-
-
   tinyxml2::XMLDocument m_xmlDoc;
   tsim::MapBuilder m_mapBuilder;
 };
