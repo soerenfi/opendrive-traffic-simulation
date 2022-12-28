@@ -70,7 +70,7 @@ jobs:
         - 80
       volumes:
         - my_docker_volume:/volume_mount
-      options: --user dev
+      options: --user root
     steps:
       - name: Copy Repo Files
         uses: actions/checkout@v3
