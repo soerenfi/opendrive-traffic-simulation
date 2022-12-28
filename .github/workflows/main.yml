@@ -35,7 +35,10 @@ jobs:
     needs: docker-build
     runs-on: ubuntu-latest
     container: 
-      image: ${{github.actor}}/xodr-dev:${{ github.sha }}
+      image: ghcr.io/${{github.actor}}/xodr-dev:${{ github.sha }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
       env:
         NODE_ENV: development
       ports:
@@ -43,6 +46,8 @@ jobs:
       volumes:
         - my_docker_volume:/volume_mount
     steps:
+      - name: Copy Repo Files
+        uses: actions/checkout@v3
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
