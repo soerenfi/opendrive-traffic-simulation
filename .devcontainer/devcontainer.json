@@ -25,7 +25,8 @@
 	},
 	"extensions": [
 		"llvm-vs-code-extensions.vscode-clangd",
-		"ms-vscode.cpptools"
+		"ms-vscode.cpptools",
+		"redhat.vscode-yaml"
 	],
 	// "forwardPorts": [],
 	// "postCreateCommand": "pip3 install --user -r requirements.txt",
