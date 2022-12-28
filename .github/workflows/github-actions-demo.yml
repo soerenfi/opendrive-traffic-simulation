@@ -16,6 +16,8 @@ jobs:
         - name: Build and push
           uses: docker/build-push-action@v3
           with:
+            context: .
+            file: .devcontainer/Dockerfile
             push: false
             tags: soerenfi/xodr-dev:$(date +%s)
 
