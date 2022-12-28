@@ -14,20 +14,27 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
 
+      - name: Docker login
+        env:
+          DOCKER_USER = ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD = ${{secrets.DOCKER_PASSWORD}}
+        run:
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
           file: .devcontainer/Dockerfile
-          push: false
-          tags: soerenfi/xodr-dev:latest
+          push: true
+          tags: soerenfindeisen/xodr-dev:${{ github.sha }}
 
   xodr-build:
     name: Compile in Docker
     needs: docker-build
     runs-on: ubuntu-latest
     container: 
-      image: soerenfi/xodr-dev:latest
+      image: soerenfindeisen/xodr-dev:${{ github.sha }}
       env:
         NODE_ENV: development
       ports:
