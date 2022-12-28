@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           pull: true
           push: true
-          tag: ${{github.actor}}/xodr-dev:${{ github.sha }}
+          tags: ${{github.actor}}/xodr-dev:${{ github.sha }}
 
   xodr-build:
     name: Compile in Docker
