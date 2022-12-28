@@ -14,21 +14,17 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
 
-      - name: Docker login
-        uses: docker/login-action@v2
-        with: # Set the secret as an input
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
           file: .devcontainer/Dockerfile
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           pull: true
           push: true
-          tags: ${{github.actor}}/xodr-dev:${{ github.sha }}
+          repository: ${{github.actor}}/xodr-dev
+          tag_with_sha: true
 
   xodr-build:
     name: Compile in Docker
